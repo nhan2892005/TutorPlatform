@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const updated = await prisma.user.update({ where: { email: session.user.email }, data: { userType: normalized } });
 
     if (normalized === 'MENTOR') {
-      await prisma.mentorProfile.upsert({ where: { userId: updated.id }, update: {}, create: { userId: updated.id, rating: 0, totalReviews: 0, expertise: [], maxMentees: 5, availableDays: [] } });
+      await prisma.mentorProfile.upsert({ where: { userId: updated.id }, update: {}, create: { userId: updated.id, rating: 0, totalReviews: 0 } });
     }
 
     return NextResponse.json({ ok: true });

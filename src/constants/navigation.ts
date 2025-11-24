@@ -6,6 +6,7 @@ export const ROUTES = {
   CALENDAR: '/calendar',
   MENTORS: '/mentor',
   MY_MENTEES: '/my-mentees',
+  MENTOR_SCHEDULE: '/mentor/schedule',
   DASHBOARD: '/dashboard',
   ASSISTANT: '/chatbot',
   MANAGE_RAG: '/admin/rag',
@@ -41,6 +42,11 @@ export const NAV_ITEMS: NavigationItem[] = [
   {
     label: 'Danh sách mentee của tôi',
     href: ROUTES.MY_MENTEES,
+    roles: ['mentor'],
+  },
+  {
+    label: 'Lịch làm việc của tôi',
+    href: ROUTES.MENTOR_SCHEDULE,
     roles: ['mentor'],
   },
   {
