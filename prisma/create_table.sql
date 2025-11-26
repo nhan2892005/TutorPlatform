@@ -1,5 +1,5 @@
-use tutor_platform;
-go
+USE tutor_platform;
+GO
 
 PRINT '===== CREATING TABLES =====';
 
