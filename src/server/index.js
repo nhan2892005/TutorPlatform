@@ -28,7 +28,7 @@ app.prepare().then(() => {
   // Create Socket.IO server with CORS configuration
   const io = new Server(httpServer, {
     cors: {
-      origin: process.env.NEXTAUTH_URL || "http://localhost:3000", // Update to match your Next.js port if needed
+      origin: process.env.NEXTAUTH_URL || "http://13.211.80.203.nip.io:3000", // Update to match your Next.js port if needed
       methods: ["GET", "POST"],
       credentials: true
     }

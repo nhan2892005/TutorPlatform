@@ -72,7 +72,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     }
 
     // Create socket connection with authentication
-    const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001', {
+    const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://13.211.80.203.nip.io:3001', {
       transports: ['websocket'],
       auth: {
         token: (session as any)?.accessToken || null
