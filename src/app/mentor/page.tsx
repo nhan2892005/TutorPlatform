@@ -35,7 +35,7 @@ export default async function MentorIndex() {
   }
 
   // Otherwise list all mentors
-  const mentorProfiles = await prisma.mentorProfile.findMany({ include: { user: { select: { id: true, name: true, department: true, achievements: true, email: true } } } });
+  const mentorProfiles = await prisma.mentorProfile.findMany({ include: { user: { select: { id: true, name: true, department: true, email: true } } } });
 
   const mentors = await Promise.all(mentorProfiles.map(async (mp:any) => {
     const currentMentees = await prisma.menteeConnection.count({ where: { mentorId: mp.userId, status: 'ACCEPTED' } });
@@ -48,7 +48,7 @@ export default async function MentorIndex() {
       department: mp.user?.department || 'Unknown',
       currentMentees,
       maxMentees: mp.maxMentees,
-      rating: mp.rating,
+      rating: mp.rating ? Number(mp.rating.toString()) : 0,
       totalReviews: mp.totalReviews,
       availableDays: Array.isArray(mp.availableDays) ? mp.availableDays.length : 0,
       expertise: mp.expertise || [],

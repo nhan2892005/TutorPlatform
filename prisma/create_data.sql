@@ -73,7 +73,6 @@ DECLARE @PostIdArduino VARCHAR(20) = (SELECT TOP 1 id FROM Post WHERE authorId =
 
 INSERT INTO Comment (content, postId, authorId) VALUES
 (N'Học trên F8 nhé bạn.', @PostId1, (SELECT id FROM [User] WHERE email = 'tuan.tran@studyspace.vn')),
--- Mentor Nhân comment bài Mentee Nhân
 (N'Em check lại chân tín hiệu Analog nhé.', @PostIdArduino, (SELECT id FROM [User] WHERE email = 'nhan.nguyen2005phuyen@hcmut.edu.vn'));
 GO
 

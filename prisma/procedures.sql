@@ -34,72 +34,51 @@ BEGIN
 END;
 GO
 
--- =============================================
--- 2. THỦ TỤC ĐẶT LỊCH HẸN (BOOKING) - QUAN TRỌNG
--- Logic: Kiểm tra kết nối -> Kiểm tra lịch trống -> Tạo Event -> Tạo Assignment -> Xóa lịch trống (để tránh trùng)
--- Tương thích: Xử lý PK chuỗi 'EVT...' bằng OUTPUT
--- =============================================
-CREATE OR ALTER PROCEDURE sp_BookMentorAppointment
-    @MenteeUserId VARCHAR(20),
-    @MentorUserId VARCHAR(20),
-    @Title NVARCHAR(255),
-    @StartTime DATETIME2,
-    @EndTime DATETIME2
+CREATE OR ALTER PROCEDURE sp_AcceptConnectionAndInvite
+    @ConnectionId VARCHAR(20),
+    @MentorId VARCHAR(20)
 AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- 1. Validate thời gian
-        IF @StartTime >= @EndTime
-            THROW 51000, N'Lỗi: Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc.', 1;
+        -- 1. Lấy thông tin connection
+        DECLARE @MenteeId VARCHAR(20);
+        SELECT @MenteeId = menteeId FROM MenteeConnection 
+        WHERE id = @ConnectionId AND mentorId = @MentorId AND status = 'PENDING';
 
-        -- 2. Validate quan hệ Mentee - Mentor (phải có kết nối ACCEPTED)
-        IF NOT EXISTS (
-            SELECT 1 FROM MenteeConnection 
-            WHERE menteeId = @MenteeUserId AND mentorId = @MentorUserId AND status = 'ACCEPTED'
-        )
-            THROW 51001, N'Lỗi: Bạn chưa kết nối với Mentor này hoặc kết nối chưa được chấp nhận.', 1;
+        IF @MenteeId IS NULL
+            THROW 51000, N'Lỗi: Yêu cầu kết nối không tồn tại hoặc không thuộc về bạn.', 1;
 
-        -- 3. Tìm lịch trống phù hợp trong bảng LichTrong
-        -- Lưu ý: LichTrong liên kết với MentorProfile, cần join để lấy đúng
-        DECLARE @MaLichTrong INT;
-        SELECT TOP 1 @MaLichTrong = lt.ma_lich_trong
-        FROM LichTrong lt
-        JOIN MentorProfile mp ON lt.mentor_id = mp.id
-        WHERE mp.userId = @MentorUserId
-          AND lt.ngay = CAST(@StartTime AS DATE)
-          AND lt.gio_bat_dau <= CAST(@StartTime AS TIME)
-          AND lt.gio_ket_thuc >= CAST(@EndTime AS TIME);
+        -- 2. Cập nhật trạng thái Connection
+        UPDATE MenteeConnection
+        SET status = 'ACCEPTED', updatedAt = GETDATE()
+        WHERE id = @ConnectionId;
 
-        IF @MaLichTrong IS NULL
-            THROW 51002, N'Lỗi: Mentor không có lịch trống trong khung giờ này.', 1;
+        -- 3. Tìm ChatServer do Mentor này sở hữu
+        DECLARE @ServerId VARCHAR(20);
+        SELECT TOP 1 @ServerId = id FROM ChatServer WHERE ownerId = @MentorId;
 
-        -- 4. Tạo CalendarEvent (Sử dụng bảng tạm để hứng ID chuỗi sinh tự động)
-        DECLARE @GeneratedEventIDs TABLE (NewID VARCHAR(20));
-        
-        INSERT INTO CalendarEvent (title, startTime, endTime, priority, creatorId, isCompleted)
-        OUTPUT inserted.id INTO @GeneratedEventIDs -- Bắt ID vừa sinh ra
-        VALUES (@Title, @StartTime, @EndTime, 'MEDIUM', @MentorUserId, 0);
-
-        DECLARE @NewEventID VARCHAR(20);
-        SELECT @NewEventID = NewID FROM @GeneratedEventIDs;
-
-        -- 5. Gán Mentee vào sự kiện (EventAssignment)
-        INSERT INTO EventAssignment (eventId, userId, status)
-        VALUES (@NewEventID, @MenteeUserId, 'ACCEPTED'); 
-        -- Gán luôn Mentor vào để hiện trên lịch cả 2 (tùy logic, ở đây creator là mentor rồi nên có thể không cần assign lại, nhưng để chắc chắn)
-        INSERT INTO EventAssignment (eventId, userId, status)
-        VALUES (@NewEventID, @MentorUserId, 'ACCEPTED');
-
-        -- 6. Xử lý Lịch Trống: Vì đã book, ta xóa lịch trống đó đi (hoặc cập nhật nếu có logic tách giờ)
-        -- Ở đây chọn phương án xóa để đảm bảo tính toàn vẹn đơn giản
-        DELETE FROM LichTrong WHERE ma_lich_trong = @MaLichTrong;
+        -- 4. Nếu Mentor có Server, tự động mời Mentee vào
+        IF @ServerId IS NOT NULL
+        BEGIN
+            -- Kiểm tra xem đã là thành viên chưa
+            IF NOT EXISTS (SELECT 1 FROM ServerMember WHERE serverId = @ServerId AND userId = @MenteeId)
+            BEGIN
+                -- Thêm trực tiếp vào Member (Bỏ qua bước Invitation vì đã là Mentee ruột)
+                INSERT INTO ServerMember (serverId, userId, role)
+                VALUES (@ServerId, @MenteeId, 'MEMBER');
+                
+                PRINT N'Đã chấp nhận kết nối và thêm Mentee vào Community của Mentor.';
+            END
+        END
+        ELSE
+        BEGIN
+            PRINT N'Đã chấp nhận kết nối (Mentor chưa có Server riêng).';
+        END
 
         COMMIT TRANSACTION;
-        
-        SELECT @NewEventID AS BookedEventId, N'Đặt lịch thành công' AS Message;
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;

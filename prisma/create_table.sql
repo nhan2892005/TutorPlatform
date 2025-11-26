@@ -1,19 +1,3 @@
-USE master;
-GO
-
-IF DB_ID('tutor_platform') IS NOT NULL
-BEGIN
-    ALTER DATABASE StudySpace SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE StudySpace;
-END
-GO
-
-CREATE DATABASE StudySpace;
-GO
-
-USE StudySpace;
-GO
-
 PRINT '===== CREATING TABLES =====';
 
 -- User

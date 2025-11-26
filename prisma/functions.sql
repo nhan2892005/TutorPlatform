@@ -24,6 +24,35 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER FUNCTION fn_FindSuitableMentors
+(
+    @SkillKeyword NVARCHAR(100)
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT DISTINCT
+        u.id AS MentorUserId,
+        u.name AS MentorName,
+        mp.rating,
+        cm.bang_cap AS Specialization,
+        -- Lấy lịch trống gần nhất trong tương lai
+        (
+            SELECT TOP 1 lt.ngay 
+            FROM LichTrong lt 
+            WHERE lt.mentor_id = mp.id AND lt.ngay >= CAST(GETDATE() AS DATE)
+            ORDER BY lt.ngay ASC, lt.gio_bat_dau ASC
+        ) AS NextAvailableDate
+    FROM [User] u
+    JOIN MentorProfile mp ON u.id = mp.userId
+    JOIN ChuyenMon cm ON cm.mentor_id = mp.id
+    WHERE u.user_type = 'MENTOR'
+      AND u.account_status = 'Active'
+      AND cm.bang_cap LIKE N'%' + @SkillKeyword + N'%'
+);
+GO
+
 -- =============================================
 -- 3. HÀM LẤY SỰ KIỆN SẮP TỚI (Inline TVF)
 -- Tối ưu: Gom nhóm logic OR trong WHERE, kiểm tra trạng thái hoàn thành
