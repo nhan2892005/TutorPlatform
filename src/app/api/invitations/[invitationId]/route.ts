@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { InvitationStatus } from "@prisma/client";
+import { InvitationStatus } from "@/types/invitation";
 
 export async function POST(
   request: Request,

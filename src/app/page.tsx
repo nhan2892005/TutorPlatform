@@ -44,18 +44,18 @@ async function getPosts(page: number = 1, limit: number = 10) {
     prisma.post.count()
   ]);
 
-  const formattedPosts = posts.map((post) => ({
+  const formattedPosts = posts.map((post:any) => ({
     ...post,
     createdAt: post.createdAt.toISOString(),
     updatedAt: post.updatedAt.toISOString(),
-    images: post.images.map((img) => img.imageUrl),
+    images: post.images.map((img:any) => img.imageUrl),
     author: {
       ...post.author,
       image: `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(post.author.name || 'User')}`, 
       role: post.author.userType
     },
 
-    comments: post.comments.map((comment) => ({
+    comments: post.comments.map((comment:any) => ({
       ...comment,
       createdAt: comment.createdAt.toISOString(),
       author: {

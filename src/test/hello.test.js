@@ -5,7 +5,7 @@ import { NextRequest } from 'next/server';  // Import để mock request
 
 test("GET /hello returns hello world", async () => {
   // Mock NextRequest (thay vì native Request)
-  const request = new NextRequest('http://localhost/api/hello', { method: 'GET' });
+  const request = new NextRequest('http://13.211.80.203.nip.io/api/hello', { method: 'GET' });
 
   const response = await GET(request);
 

@@ -36,7 +36,7 @@ export async function GET() {
     });
 
     // Add generated avatar
-    const formattedMentors = mentors.map(mentor => ({
+    const formattedMentors = mentors.map((mentor:any) => ({
       ...mentor,
       user: {
         ...mentor.user,

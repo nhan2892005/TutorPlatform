@@ -43,7 +43,7 @@ export default function ChannelSidebar({ serverId }: Props) {
     }
   }, [serverId, channels, activeChannel, setActiveChannel, router]);
 
-  const handleChannelClick = (channel: Channel) => {
+  const handleChannelClick = (channel: any) => {
     setActiveChannel(channel);
     router.push(`/group/${serverId}/${channel.id}`);
   };

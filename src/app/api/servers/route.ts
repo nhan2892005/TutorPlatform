@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     
     const formattedServer = {
       ...server,
-      members: server.members.map(member => ({
+      members: server.members.map((member:any) => ({
         ...member,
         user: {
           ...member.user,
@@ -142,13 +142,13 @@ export async function GET() {
       }
     });
 
-    const formattedServers = servers.map(server => ({
+    const formattedServers = servers.map((server:any) => ({
       ...server,
       owner: {
         ...server.owner,
         image: `https://api.dicebear.com/9.x/initials/svg?seed=${server.owner.name}`
       },
-      members: server.members.map(member => ({
+      members: server.members.map((member:any) => ({
         ...member,
         user: {
           ...member.user,
