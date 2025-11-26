@@ -1,3 +1,6 @@
+use tutor_platform;
+go
+
 PRINT '===== BẮT ĐẦU TẠO MOCK DATA (AUTO ID) =====';
 
 -- =============================================

@@ -1,3 +1,6 @@
+use tutor_platform;
+go
+
 PRINT '===== CREATING TABLES =====';
 
 -- User

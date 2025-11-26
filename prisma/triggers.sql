@@ -1,5 +1,5 @@
-USE StudySpace;
-GO
+use tutor_platform;
+go
 
 -- =============================================
 -- 1. TRIGGER TỰ ĐỘNG CẬP NHẬT RATING MENTOR

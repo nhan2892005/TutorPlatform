@@ -1,5 +1,5 @@
-USE StudySpace;
-GO
+use tutor_platform;
+go
 
 -- =============================================
 -- 1. THỦ TỤC THÊM ĐÁNH GIÁ (REVIEW)

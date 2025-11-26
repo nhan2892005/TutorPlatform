@@ -1,5 +1,5 @@
-USE StudySpace;
-GO
+use tutor_platform;
+go
 
 -- =============================================
 -- 1. HÀM LẤY ĐIỂM ĐÁNH GIÁ TRUNG BÌNH MENTOR
