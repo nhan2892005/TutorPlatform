@@ -62,7 +62,6 @@ DECLARE @MenteeAn VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'an.nguyen@
 DECLARE @MenteeNgoc VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'ngoc.phan@student.vn');
 DECLARE @MentorA VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'a.tran@mentor.vn');
 DECLARE @MenteeL VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'l.tran@student.vn');
-GO
 
 -- =============================================
 -- 3. INSERT MENTOR PROFILES
@@ -74,7 +73,6 @@ INSERT INTO MentorProfile (userId, rating, totalReviews) VALUES
 ( (SELECT id FROM [User] WHERE email = 'f.do@mentor.vn'), 4.8, 14), ( (SELECT id FROM [User] WHERE email = 'g.ho@mentor.vn'), 5.0, 30),
 ( (SELECT id FROM [User] WHERE email = 'h.ly@mentor.vn'), 4.2, 6), ( (SELECT id FROM [User] WHERE email = 'i.kim@mentor.vn'), 4.7, 16),
 ( (SELECT id FROM [User] WHERE email = 'k.bui@mentor.vn'), 4.5, 11);
-GO
 
 -- =============================================
 -- 4. INSERT CHUYÊN MÔN
@@ -87,7 +85,6 @@ INSERT INTO [ChuyenMon] (mentor_id, bang_cap) VALUES
 (@MP_AnhThu, N'Quản trị kinh doanh nâng cao'), (@MP_AnhThu, N'Marketing Digital Pro'), (@MP_AnhThu, N'Leadership MBA'),
 ( (SELECT id FROM MentorProfile WHERE userId = @MentorTuan), N'Java Spring Boot'), ( (SELECT id FROM MentorProfile WHERE userId = @MentorMai), N'Digital Marketing Master'),
 ( (SELECT id FROM MentorProfile WHERE userId = @MentorA), N'AI TensorFlow'), ( (SELECT id FROM MentorProfile WHERE userId = @MentorA), N'Python ML');
-GO
 
 -- =============================================
 -- 5. INSERT LỊCH TRỐNG
@@ -97,7 +94,6 @@ INSERT INTO [LichTrong] (mentor_id, ngay, gio_bat_dau, gio_ket_thuc) VALUES
 (@MP_NPN, '2024-10-18', '13:00:00', '15:00:00'), (@MP_NPN, '2024-10-20', '10:00:00', '11:00:00'),
 (@MP_AnhThu, '2024-10-15', '09:00:00', '11:00:00'), (@MP_AnhThu, '2024-10-19', '15:00:00', '17:00:00'),
 ( (SELECT id FROM MentorProfile WHERE userId = @MentorTuan), '2024-10-16', '10:00:00', '12:00:00');
-GO
 
 -- =============================================
 -- 6. INSERT MENTEE CONNECTION
@@ -108,13 +104,11 @@ INSERT INTO MenteeConnection (menteeId, mentorId, status) VALUES
 (@MenteeNgoc, @MentorMai, 'ACCEPTED'), (@MenteeL, @MentorA, 'PENDING'),
 ( (SELECT id FROM [User] WHERE email = 'm.nguyen@student.vn'), @MentorNPN, 'PENDING'),
 ( (SELECT id FROM [User] WHERE email = 'n.le@student.vn'), @MentorAnhThu, 'ACCEPTED');
-GO
 
 DECLARE @ConnNPN_NPN VARCHAR(20) = (SELECT id FROM MenteeConnection WHERE menteeId = @MenteeNPN AND mentorId = @MentorNPN);
 DECLARE @ConnVy_NPN VARCHAR(20) = (SELECT id FROM MenteeConnection WHERE menteeId = @MenteeVyThuong AND mentorId = @MentorNPN);
 
 UPDATE MenteeConnection SET status = 'ACCEPTED', updatedAt = GETDATE() WHERE id IN (@ConnNPN_NPN, @ConnVy_NPN);
-GO
 
 -- =============================================
 -- 7. INSERT CALENDAR EVENTS
@@ -124,12 +118,10 @@ INSERT INTO CalendarEvent (title, description, startTime, endTime, priority, cre
 (N'Lớp học Marketing', N'Cho Vy Thương', '2024-10-22 14:00:00', '2024-10-22 16:00:00', 'MEDIUM', @MentorAnhThu),
 (N'Webinar AI', N'Mở cho tất cả', '2024-10-25 09:00:00', '2024-10-25 12:00:00', 'URGENT', @MentorA),
 (N'Buổi tư vấn cá nhân', N'Với Nguyễn Văn An', '2024-10-18 15:00:00', '2024-10-18 16:00:00', 'LOW', @MentorTuan);
-GO
 
 DECLARE @Event1 VARCHAR(20) = (SELECT TOP 1 id FROM CalendarEvent WHERE title = N'Họp mentor với Mentee NPN');
 INSERT INTO EventAssignment (eventId, userId, status) VALUES
 (@Event1, @MenteeNPN, 'ACCEPTED'), (@Event1, @MenteeVyThuong, 'PENDING');
-GO
 
 -- =============================================
 -- 8. INSERT PROGRESS RECORD
@@ -137,7 +129,6 @@ GO
 INSERT INTO ProgressRecord (menteeId, score, notes) VALUES
 (@MenteeNPN, 95.5, N'Hoàn thành module Giải thuật nâng cao'), (@MenteeNPN, 88.0, N'Cải thiện C++'),
 (@MenteeVyThuong, 92.0, N'Tốt Marketing cơ bản'), (@MenteeAn, 85.0, N'Java Spring Boot');
-GO
 
 -- =============================================
 -- 9. INSERT REPORTS VIEW
@@ -145,7 +136,6 @@ GO
 INSERT INTO ReportsView (userId, title, description, visibility) VALUES
 (@AdminNPN, N'Báo cáo hệ thống', N'Tổng quan user', 'Private'),
 (@MentorNPN, N'Báo cáo mentee', N'Tiến độ NPN & Vy Thương', 'Private');
-GO
 
 -- =============================================
 -- 10. INSERT POSTS, IMAGES, COMMENTS, REACTIONS
@@ -154,7 +144,6 @@ INSERT INTO Post (content, authorId) VALUES
 (N'Lộ trình học ReactJS cho người mới?', @MenteeNPN), (N'Chia sẻ tài liệu Competitive Programming.', @MentorNPN),
 (N'Hỏi về Arduino IoT', @MenteeVyThuong), (N'Mẹo Marketing 2024', @MentorAnhThu),
 (N'Cách học AI nhanh?', @MenteeL);
-GO
 
 DECLARE @PostNPN1 VARCHAR(20) = (SELECT TOP 1 id FROM Post WHERE authorId = @MenteeNPN);
 DECLARE @PostVy VARCHAR(20) = (SELECT TOP 1 id FROM Post WHERE authorId = @MenteeVyThuong);
@@ -167,7 +156,6 @@ INSERT INTO Comment (content, postId, authorId) VALUES
 
 INSERT INTO Reaction (type, postId, userId) VALUES
 ('LIKE', @PostNPN1, @MentorNPN), ('HEART', @PostVy, @MenteeNPN);
-GO
 
 -- =============================================
 -- 11. INSERT REVIEWS & MENTOR FEEDBACK
@@ -179,7 +167,6 @@ INSERT INTO Review (reviewerId, mentorId, rating, comment) VALUES
 
 INSERT INTO MentorFeedback (mentorId, menteeId, score, comment) VALUES
 (@MentorNPN, @MenteeNPN, 98, N'Học giỏi, chăm chỉ'), (@MentorAnhThu, @MenteeVyThuong, 95, N'Tích cực');
-GO
 
 -- =============================================
 -- 12. INSERT CHAT SERVERS, CHANNELS, MESSAGES, FILES, RECORDINGS
@@ -213,7 +200,6 @@ INSERT INTO [File] (name, url, size, messageId) VALUES
 
 INSERT INTO Recording (description, duration, channelId, recorderId) VALUES
 (N'Ghi âm buổi giải DP', 3600, @ChannelDP, @MentorNPN);
-GO
 
 -- =============================================
 -- 13. INSERT CHAT CONVERSATION & MESSAGES
@@ -227,7 +213,6 @@ INSERT INTO ChatMessage (conversationId, content) VALUES
 (@ConvNPN, N'Bot: Chào bạn, hỏi về DP đi!'), (@ConvNPN, N'Mentee: Knapsack là gì?'),
 (@ConvNPN, N'Bot: Đây là bài toán ba lô...'), -- Thêm 20 tin nhắn giả chatbot
 (@ConvNPN, N'Mentee: Cảm ơn bot!');
-GO
 
 -- =============================================
 -- 14. INSERT NOTIFICATIONS
