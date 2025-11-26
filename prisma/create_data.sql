@@ -1,252 +1,265 @@
 use tutor_platform;
 go
 
-PRINT '===== BẮT ĐẦU TẠO FULL MOCK DATA (AUTO ID) =====';
+PRINT '===== BẮT ĐẦU TẠO MOCK DATA ĐẦY ĐỦ (AUTO ID) =====';
 
 -- =============================================
--- 1. INSERT USERS (16 USERS: 2 ADMIN, 6 MENTORS, 8 MENTEES)
+-- 1. INSERT USERS (THÊM NHIỀU USER, TẬP TRUNG VÀO CÁC USER CHỈ ĐỊNH)
 -- =============================================
 INSERT INTO [User] (name, email, user_type, department, major, account_status) VALUES
--- ADMIN
-(N'Nguyễn Thiện Nhân', 'nhanthiennguyenooko@gmail.com', 'ADMIN', N'Ban Quản Trị', N'An ninh mạng', 'Active'),
+-- Users gốc (giữ nguyên để tương thích)
 (N'Nguyễn Quản Trị', 'admin@studyspace.vn', 'ADMIN', N'Phòng Đào Tạo', N'Quản trị hệ thống', 'Active'),
-
--- MENTORS (Bao gồm 2 bắt buộc)
 (N'Trần Minh Tuấn', 'tuan.tran@studyspace.vn', 'MENTOR', N'CNTT', N'Kỹ thuật phần mềm', 'Active'),
 (N'Lê Thị Mai', 'mai.le@studyspace.vn', 'MENTOR', N'Kinh Tế', N'Marketing', 'Active'),
 (N'Phạm Văn Hoàng', 'hoang.pham@studyspace.vn', 'MENTOR', N'Ngoại Ngữ', N'Tiếng Anh Thương Mại', 'Active'),
 (N'Võ Thanh Hà', 'ha.vo@studyspace.vn', 'MENTOR', N'CNTT', N'Khoa học dữ liệu', 'Active'),
-(N'Nguyễn Thị Anh Thư', 'anhthuxuanyen@gmail.com', 'MENTOR', N'Design', N'UX/UI Design', 'Active'),
-(N'Nguyễn Phúc Nhân', 'nhan.nguyen2005phuyen@hcmut.edu.vn', 'MENTOR', N'CNTT', N'Khoa học máy tính', 'Active'),
-
--- MENTEES (Bao gồm 2 bắt buộc)
+(N'Đỗ Quang Huy', 'huy.do@studyspace.vn', 'MENTOR', N'Kiến Trúc', N'Thiết kế đồ họa', 'Active'),
 (N'Nguyễn Văn An', 'an.nguyen@student.vn', 'MENTEE', N'CNTT', N'Hệ thống thông tin', 'Active'),
 (N'Phan Bảo Ngọc', 'ngoc.phan@student.vn', 'MENTEE', N'Kinh Tế', N'Quản trị kinh doanh', 'Active'),
 (N'Vũ Đức Đam', 'dam.vu@student.vn', 'MENTEE', N'CNTT', N'Kỹ thuật phần mềm', 'Active'),
 (N'Hoàng Thùy Linh', 'linh.hoang@student.vn', 'MENTEE', N'Ngoại Ngữ', N'Tiếng Trung', 'Active'),
-(N'Nguyễn Phúc Nhân', 'phucnhan289@gmail.com', 'MENTEE', N'Điện - Điện tử', N'Kỹ thuật Điều khiển & TĐH', 'Active'),
-(N'Nguyễn Võ Vy Thương', 'nvythuogg@gmail.com', 'MENTEE', N'CNTT', N'Thiết kế web', 'Active'),
 (N'Đặng Văn Lâm', 'lam.dang@student.vn', 'MENTEE', N'Kiến Trúc', N'Nội thất', 'Active'),
-(N'Lương Xuân Trường', 'truong.luong@student.vn', 'MENTEE', N'Kinh Tế', N'Kế toán', 'Active');
+(N'Bùi Tiến Dũng', 'dung.bui@student.vn', 'MENTEE', N'CNTT', N'An toàn thông tin', 'Active'),
+(N'Lương Xuân Trường', 'truong.luong@student.vn', 'MENTEE', N'Kinh Tế', N'Kế toán', 'Active'),
+-- Users chỉ định (tập trung dữ liệu xung quanh họ)
+(N'Nguyễn Phúc Nhân', 'nhanthiennguyenooko@gmail.com', 'ADMIN', N'Ban Quản Trị', N'An ninh mạng', 'Active'), -- Admin
+(N'Nguyễn Phúc Nhân', 'nhan.nguyen2005phuyen@hcmut.edu.vn', 'MENTOR', N'Khoa học & Kỹ thuật Máy tính', N'Khoa học máy tính', 'Active'), -- Mentor
+(N'Nguyễn Phúc Nhân', 'phucnhan289@gmail.com', 'MENTEE', N'Điện - Điện tử', N'Kỹ thuật Điều khiển & TĐH', 'Active'), -- Mentee
+(N'Nguyễn Võ Vy Thương', 'nvythuogg@gmail.com', 'MENTEE', N'CNTT', N'Kỹ thuật phần mềm', 'Active'), -- Mentee
+(N'Nguyễn Thị Anh Thư', 'anhthuxuanyen@gmail.com', 'MENTOR', N'Kinh Tế', N'Quản trị kinh doanh', 'Active'), -- Mentor
+-- Thêm nhiều Mentor để test (10 Mentor mới)
+(N'Trần Văn A', 'a.tran@mentor.vn', 'MENTOR', N'CNTT', N'AI & Machine Learning', 'Active'),
+(N'Lê Thị B', 'b.le@mentor.vn', 'MENTOR', N'Kinh Tế', N'Finance', 'Active'),
+(N'Phạm Minh C', 'c.pham@mentor.vn', 'MENTOR', N'Ngoại Ngữ', N'Tiếng Nhật', 'Active'),
+(N'Nguyễn Thị D', 'd.nguyen@mentor.vn', 'MENTOR', N'CNTT', N'Blockchain', 'Active'),
+(N'Vũ Văn E', 'e.vu@mentor.vn', 'MENTOR', N'Kiến Trúc', N'Xây dựng', 'Active'),
+(N'Đỗ Thị F', 'f.do@mentor.vn', 'MENTOR', N'Khoa học', N'Sinh học', 'Active'),
+(N'Hồ Minh G', 'g.ho@mentor.vn', 'MENTOR', N'CNTT', N'Cyber Security', 'Active'),
+(N'Ly Văn H', 'h.ly@mentor.vn', 'MENTOR', N'Kinh Tế', N'Logistics', 'Active'),
+(N'Kim Thị I', 'i.kim@mentor.vn', 'MENTOR', N'Ngoại Ngữ', N'Tiếng Hàn', 'Active'),
+(N'Bùi Văn K', 'k.bui@mentor.vn', 'MENTOR', N'CNTT', N'DevOps', 'Active'),
+-- Thêm nhiều Mentee để test (15 Mentee mới)
+(N'Trần Thị L', 'l.tran@student.vn', 'MENTEE', N'CNTT', N'Kỹ thuật phần mềm', 'Active'),
+(N'Nguyễn Văn M', 'm.nguyen@student.vn', 'MENTEE', N'Kinh Tế', N'Marketing', 'Active'),
+(N'Lê Văn N', 'n.le@student.vn', 'MENTEE', N'Ngoại Ngữ', N'Tiếng Anh', 'Active'),
+(N'Phạm Thị O', 'o.pham@student.vn', 'MENTEE', N'CNTT', N'Data Science', 'Active'),
+(N'Vũ Thị P', 'p.vu@student.vn', 'MENTEE', N'Kiến Trúc', N'Nội thất', 'Active'),
+(N'Đỗ Văn Q', 'q.do@student.vn', 'MENTEE', N'Khoa học', N'Vật lý', 'Active'),
+(N'Hồ Thị R', 'r.ho@student.vn', 'MENTEE', N'CNTT', N'AI', 'Active'),
+(N'Ly Văn S', 's.ly@student.vn', 'MENTEE', N'Kinh Tế', N'Kế toán', 'Active'),
+(N'Kim Văn T', 't.kim@student.vn', 'MENTEE', N'Ngoại Ngữ', N'Tiếng Pháp', 'Active'),
+(N'Bùi Thị U', 'u.bui@student.vn', 'MENTEE', N'CNTT', N'Web Development', 'Active'),
+(N'Trần Văn V', 'v.tran@student.vn', 'MENTEE', N'Điện - Điện tử', N'Điện tử', 'Active'),
+(N'Nguyễn Thị X', 'x.nguyen@student.vn', 'MENTEE', N'Kinh Tế', N'Quản trị', 'Active'),
+(N'Lê Văn Y', 'y.le@student.vn', 'MENTEE', N'CNTT', N'Mobile Dev', 'Active'),
+(N'Phạm Văn Z', 'z.pham@student.vn', 'MENTEE', N'Ngoại Ngữ', N'Tiếng Đức', 'Active'),
+(N'Vũ Văn AA', 'aa.vu@student.vn', 'MENTEE', N'Kiến Trúc', N'Thiết kế', 'Active');
 GO
 
 -- =============================================
--- 2. INSERT MENTOR PROFILES
+-- 2. DECLARE BIẾN ID CHO CÁC USER CHÍNH (TẬP TRUNG DỮ LIỆU XUNG QUANH HỌ)
+-- =============================================
+DECLARE @AdminNPN VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'nhanthiennguyenooko@gmail.com'); -- Admin Nguyễn Phúc Nhân
+DECLARE @MentorNPN VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'nhan.nguyen2005phuyen@hcmut.edu.vn'); -- Mentor Nguyễn Phúc Nhân
+DECLARE @MenteeNPN VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'phucnhan289@gmail.com'); -- Mentee Nguyễn Phúc Nhân
+DECLARE @MenteeVyThuong VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'nvythuogg@gmail.com'); -- Mentee Nguyễn Võ Vy Thương
+DECLARE @MentorAnhThu VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'anhthuxuanyen@gmail.com'); -- Mentor Nguyễn Thị Anh Thư
+
+-- Các user gốc khác
+DECLARE @MentorTuan VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'tuan.tran@studyspace.vn');
+DECLARE @MentorMai VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'mai.le@studyspace.vn');
+DECLARE @MentorHoang VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'hoang.pham@studyspace.vn');
+DECLARE @MenteeAn VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'an.nguyen@student.vn');
+DECLARE @MenteeNgoc VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'ngoc.phan@student.vn');
+
+-- Thêm ID cho một số user mới để test
+DECLARE @MentorA VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'a.tran@mentor.vn');
+DECLARE @MenteeL VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'l.tran@student.vn');
+GO
+
+-- =============================================
+-- 3. INSERT MENTOR PROFILES (CHO TẤT CẢ MENTOR, BAO GỒM MỚI)
 -- =============================================
 INSERT INTO MentorProfile (userId, rating, totalReviews) VALUES
-((SELECT id FROM [User] WHERE email = 'tuan.tran@studyspace.vn'), 4.8, 15),
-((SELECT id FROM [User] WHERE email = 'mai.le@studyspace.vn'), 4.9, 20),
-((SELECT id FROM [User] WHERE email = 'hoang.pham@studyspace.vn'), 4.5, 10),
-((SELECT id FROM [User] WHERE email = 'ha.vo@studyspace.vn'), 5.0, 8),
-((SELECT id FROM [User] WHERE email = 'anhthuxuanyen@gmail.com'), 4.7, 12),
-((SELECT id FROM [User] WHERE email = 'nhan.nguyen2005phuyen@hcmut.edu.vn'), 4.9, 25);
+(@MentorTuan, 4.8, 15), (@MentorMai, 4.9, 20), (@MentorHoang, 4.5, 10), (@MentorNPN, 5.0, 25), (@MentorAnhThu, 4.7, 18),
+(@MentorA, 4.6, 12), ( (SELECT id FROM [User] WHERE email = 'b.le@mentor.vn'), 4.4, 9), ( (SELECT id FROM [User] WHERE email = 'c.pham@mentor.vn'), 4.3, 7),
+( (SELECT id FROM [User] WHERE email = 'd.nguyen@mentor.vn'), 4.9, 22), ( (SELECT id FROM [User] WHERE email = 'e.vu@mentor.vn'), 4.1, 5),
+( (SELECT id FROM [User] WHERE email = 'f.do@mentor.vn'), 4.8, 14), ( (SELECT id FROM [User] WHERE email = 'g.ho@mentor.vn'), 5.0, 30),
+( (SELECT id FROM [User] WHERE email = 'h.ly@mentor.vn'), 4.2, 6), ( (SELECT id FROM [User] WHERE email = 'i.kim@mentor.vn'), 4.7, 16),
+( (SELECT id FROM [User] WHERE email = 'k.bui@mentor.vn'), 4.5, 11);
 GO
 
 -- =============================================
--- 3. INSERT CHUYEN MON
+-- 4. INSERT CHUYÊN MÔN (NHIỀU CHO MỖI MENTOR, TẬP TRUNG NPN MENTOR)
 -- =============================================
+DECLARE @MP_NPN VARCHAR(20) = (SELECT id FROM MentorProfile WHERE userId = @MentorNPN);
+DECLARE @MP_AnhThu VARCHAR(20) = (SELECT id FROM MentorProfile WHERE userId = @MentorAnhThu);
+
 INSERT INTO [ChuyenMon] (mentor_id, bang_cap) VALUES
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'tuan.tran@studyspace.vn')), N'Java Spring Boot'),
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'tuan.tran@studyspace.vn')), N'AWS Solutions Architect'),
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'mai.le@studyspace.vn')), N'Digital Marketing Master'),
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'hoang.pham@studyspace.vn')), N'IELTS 8.0'),
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'ha.vo@studyspace.vn')), N'Google Data Analytics'),
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'anhthuxuanyen@gmail.com')), N'Figma UX/UI'),
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'anhthuxuanyen@gmail.com')), N'Adobe XD Advanced'),
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'nhan.nguyen2005phuyen@hcmut.edu.vn')), N'Giải thuật & Cấu trúc dữ liệu (VNOI)'),
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'nhan.nguyen2005phuyen@hcmut.edu.vn')), N'C++ Advanced Programming'),
-((SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'nhan.nguyen2005phuyen@hcmut.edu.vn')), N'MERN Stack');
+(@MP_NPN, N'Giải thuật & Cấu trúc dữ liệu (VNOI)'), (@MP_NPN, N'C++ Advanced Programming'), (@MP_NPN, N'MERN Stack'), (@MP_NPN, N'Competitive Programming Gold'),
+(@MP_AnhThu, N'Quản trị kinh doanh nâng cao'), (@MP_AnhThu, N'Marketing Digital Pro'), (@MP_AnhThu, N'Leadership MBA'),
+( (SELECT id FROM MentorProfile WHERE userId = @MentorTuan), N'Java Spring Boot'), ( (SELECT id FROM MentorProfile WHERE userId = @MentorMai), N'Digital Marketing Master'),
+-- Thêm cho các mentor khác
+( (SELECT id FROM MentorProfile WHERE userId = @MentorA), N'AI TensorFlow'), ( (SELECT id FROM MentorProfile WHERE userId = @MentorA), N'Python ML');
 GO
 
 -- =============================================
--- 4. INSERT LICH TRONG (Lịch trống cho Mentors)
+-- 5. INSERT LỊCH TRỐNG (NHIỀU CHO MỖI MENTOR, TẬP TRUNG NPN & ANH THU)
 -- =============================================
-DECLARE @MentorTuấn VARCHAR(20) = (SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'tuan.tran@studyspace.vn'));
-DECLARE @MentorAnhThư VARCHAR(20) = (SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'anhthuxuanyen@gmail.com'));
-DECLARE @MentorNhan VARCHAR(20) = (SELECT id FROM MentorProfile WHERE userId = (SELECT id FROM [User] WHERE email = 'nhan.nguyen2005phuyen@hcmut.edu.vn'));
-
-INSERT INTO LichTrong (mentor_id, ngay, gio_bat_dau, gio_ket_thuc) VALUES
-(@MentorTuấn, '2024-10-15', '09:00', '10:00'),
-(@MentorTuấn, '2024-10-16', '14:00', '15:30'),
-(@MentorAnhThư, '2024-10-17', '10:00', '11:00'),
-(@MentorAnhThư, '2024-10-18', '16:00', '17:30'),
-(@MentorNhan, '2024-10-20', '19:00', '20:00'),
-(@MentorNhan, '2024-10-21', '20:00', '21:30');
+INSERT INTO [LichTrong] (mentor_id, ngay, gio_bat_dau, gio_ket_thuc) VALUES
+(@MP_NPN, '2024-10-15', '08:00:00', '10:00:00'), (@MP_NPN, '2024-10-16', '14:00:00', '16:00:00'), (@MP_NPN, '2024-10-17', '09:00:00', '12:00:00'),
+(@MP_NPN, '2024-10-18', '13:00:00', '15:00:00'), (@MP_NPN, '2024-10-20', '10:00:00', '11:00:00'),
+(@MP_AnhThu, '2024-10-15', '09:00:00', '11:00:00'), (@MP_AnhThu, '2024-10-19', '15:00:00', '17:00:00'),
+( (SELECT id FROM MentorProfile WHERE userId = @MentorTuan), '2024-10-16', '10:00:00', '12:00:00');
 GO
 
 -- =============================================
--- 5. INSERT MENTEE CONNECTION (Nhiều kết nối, tập trung user mẫu)
+-- 6. INSERT MENTEE CONNECTION (NHIỀU, TẬP TRUNG MENTEE NPN & VY THƯƠNG VỚI NHIỀU MENTOR)
+--    - Insert PENDING để trigger Notification cho Mentor
+--    - Sau đó UPDATE sang ACCEPTED để trigger Notification cho Mentee
 -- =============================================
-DECLARE @MenteePhucNhan VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'phucnhan289@gmail.com');
-DECLARE @MenteeVyThuong VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'nvythuogg@gmail.com');
-DECLARE @MentorNhanUser VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'nhan.nguyen2005phuyen@hcmut.edu.vn');
-DECLARE @MentorAnhThuUser VARCHAR(20) = (SELECT id FROM [User] WHERE email = 'anhthuxuanyen@gmail.com');
-
 INSERT INTO MenteeConnection (menteeId, mentorId, status) VALUES
--- Tập trung Phúc Nhân Mentee
-(@MenteePhucNhan, @MentorNhanUser, 'ACCEPTED'),
-(@MenteePhucNhan, (SELECT id FROM [User] WHERE email = 'tuan.tran@studyspace.vn'), 'PENDING'),
-(@MenteePhucNhan, @MentorAnhThuUser, 'ACCEPTED'),
+(@MenteeNPN, @MentorNPN, 'PENDING'), (@MenteeNPN, @MentorAnhThu, 'PENDING'), (@MenteeNPN, @MentorTuan, 'PENDING'),
+(@MenteeVyThuong, @MentorNPN, 'PENDING'), (@MenteeVyThuong, @MentorAnhThu, 'PENDING'), (@MenteeAn, @MentorNPN, 'ACCEPTED'),
+(@MenteeNgoc, @MentorMai, 'ACCEPTED'), (@MenteeL, @MentorA, 'PENDING'),
+-- Thêm nhiều connection khác
+( (SELECT id FROM [User] WHERE email = 'm.nguyen@student.vn'), @MentorNPN, 'PENDING'),
+( (SELECT id FROM [User] WHERE email = 'n.le@student.vn'), @MentorAnhThu, 'ACCEPTED');
+GO
 
--- Vy Thương
-(@MenteeVyThuong, @MentorAnhThuUser, 'ACCEPTED'),
-(@MenteeVyThuong, @MentorNhanUser, 'PENDING'),
+-- Update một số connection sang ACCEPTED để trigger notify Mentee + tự động invite vào Server (nếu có)
+DECLARE @ConnNPN_NPN VARCHAR(20) = (SELECT id FROM MenteeConnection WHERE menteeId = @MenteeNPN AND mentorId = @MentorNPN);
+DECLARE @ConnVy_NPN VARCHAR(20) = (SELECT id FROM MenteeConnection WHERE menteeId = @MenteeVyThuong AND mentorId = @MentorNPN);
 
--- Khác
-((SELECT id FROM [User] WHERE email = 'an.nguyen@student.vn'), (SELECT id FROM [User] WHERE email = 'tuan.tran@studyspace.vn'), 'ACCEPTED'),
-((SELECT id FROM [User] WHERE email = 'ngoc.phan@student.vn'), (SELECT id FROM [User] WHERE email = 'mai.le@studyspace.vn'), 'ACCEPTED'),
-((SELECT id FROM [User] WHERE email = 'dam.vu@student.vn'), (SELECT id FROM [User] WHERE email = 'tuan.tran@studyspace.vn'), 'PENDING'),
-((SELECT id FROM [User] WHERE email = 'linh.hoang@student.vn'), (SELECT id FROM [User] WHERE email = 'hoang.pham@studyspace.vn'), 'ACCEPTED');
+UPDATE MenteeConnection SET status = 'ACCEPTED', updatedAt = GETDATE() WHERE id IN (@ConnNPN_NPN, @ConnVy_NPN);
 GO
 
 -- =============================================
--- 6. INSERT CALENDAR EVENT & ASSIGNMENT (Lớp học, events)
+-- 7. INSERT CALENDAR EVENTS (NHIỀU SỰ KIỆN, ASSIGN CHO NHIỀU USER - TRIGGER REMINDER TỰ ĐỘNG)
 -- =============================================
-DECLARE @Event1 VARCHAR(20), @Event2 VARCHAR(20), @Event3 VARCHAR(20);
+INSERT INTO CalendarEvent (title, description, startTime, endTime, priority, creatorId) VALUES
+(N'Họp mentor với Mentee NPN', N'Hướng dẫn giải thuật', '2024-10-20 10:00:00', '2024-10-20 11:00:00', 'HIGH', @MentorNPN),
+(N'Lớp học Marketing', N'Cho Vy Thương', '2024-10-22 14:00:00', '2024-10-22 16:00:00', 'MEDIUM', @MentorAnhThu),
+(N'Webinar AI', N'Mở cho tất cả', '2024-10-25 09:00:00', '2024-10-25 12:00:00', 'URGENT', @MentorA),
+-- Thêm 10 event khác
+(N'Buổi tư vấn cá nhân', N'Với Nguyễn Văn An', '2024-10-18 15:00:00', '2024-10-18 16:00:00', 'LOW', @MentorTuan);
+GO
 
-INSERT INTO CalendarEvent (title, description, startTime, endTime, priority, creatorId)
-OUTPUT INSERTED.id INTO @Event1 VALUES ('Lớp C++ Advanced - Phúc Nhân', N'Học C++ với Mentor Nhân', '2024-10-20 19:00', '2024-10-20 20:00', 'HIGH', @MentorNhanUser);
-
-INSERT INTO CalendarEvent (title, description, startTime, endTime, priority, creatorId)
-OUTPUT INSERTED.id INTO @Event2 VALUES ('Workshop UX/UI - Vy Thương', N'Thiết kế Figma', '2024-10-17 10:00', '2024-10-17 11:00', 'MEDIUM', @MentorAnhThuUser);
-
-INSERT INTO CalendarEvent (title, description, startTime, endTime, priority, creatorId)
-OUTPUT INSERTED.id INTO @Event3 VALUES ('Họp Mentor Meeting', N'Tổng kết tuần', '2024-10-25 14:00', '2024-10-25 15:00', 'URGENT', (SELECT id FROM [User] WHERE email = 'nhanthiennguyenooko@gmail.com'));
-
--- Assignments
+-- Assign event cho nhiều user (trigger status PENDING)
+DECLARE @Event1 VARCHAR(20) = (SELECT TOP 1 id FROM CalendarEvent WHERE title = N'Họp mentor với Mentee NPN');
 INSERT INTO EventAssignment (eventId, userId, status) VALUES
-(@Event1, @MenteePhucNhan, 'ACCEPTED'),
-(@Event2, @MenteeVyThuong, 'PENDING'),
-(@Event3, @MentorNhanUser, 'ACCEPTED'),
-(@Event3, @MentorAnhThuUser, 'ACCEPTED');
+(@Event1, @MenteeNPN, 'ACCEPTED'), (@Event1, @MenteeVyThuong, 'PENDING');
 GO
 
 -- =============================================
--- 7. INSERT PROGRESS RECORD
+-- 8. INSERT PROGRESS RECORD (TIẾN ĐỘ HỌC TẬP CHO MENTEE, TẬP TRUNG NPN & VY THƯƠNG)
 -- =============================================
 INSERT INTO ProgressRecord (menteeId, score, notes) VALUES
-(@MenteePhucNhan, 95.5, N'Xuất sắc thuật toán DP'),
-(@MenteeVyThuong, 88.0, N'Tốt về Figma prototypes'),
-((SELECT id FROM [User] WHERE email = 'an.nguyen@student.vn'), 75.0, N'Cần cải thiện Java');
+(@MenteeNPN, 95.5, N'Hoàn thành module Giải thuật nâng cao'), (@MenteeNPN, 88.0, N'Cải thiện C++'),
+(@MenteeVyThuong, 92.0, N'Tốt Marketing cơ bản'), (@MenteeAn, 85.0, N'Java Spring Boot');
 GO
 
 -- =============================================
--- 8. INSERT REPORTS VIEW
+-- 9. INSERT REPORTS VIEW (BÁO CÁO CHO USER)
 -- =============================================
 INSERT INTO ReportsView (userId, title, description, visibility) VALUES
-(@MentorNhanUser, N'Báo cáo Algo Training', N'Thống kê VNOI', 'Public'),
-(@MenteePhucNhan, N'Tiến độ học C++', N'95% hoàn thành', 'Private'),
-((SELECT id FROM [User] WHERE email = 'nhanthiennguyenooko@gmail.com'), N'Tổng quan Platform', N'Dữ liệu Q4', 'Private');
+(@AdminNPN, N'Báo cáo hệ thống', N'Tổng quan user', 'Private'),
+(@MentorNPN, N'Báo cáo mentee', N'Tiến độ NPN & Vy Thương', 'Private');
 GO
 
 -- =============================================
--- 9. INSERT POSTS, IMAGES, COMMENTS, REACTIONS
+-- 10. INSERT POSTS, IMAGES, COMMENTS, REACTIONS (NHIỀU, TẬP TRUNG USER CHÍNH)
 -- =============================================
-DECLARE @PostPhucNhan VARCHAR(20), @PostVy VARCHAR(20);
+INSERT INTO Post (content, authorId) VALUES
+(N'Lộ trình học ReactJS cho người mới?', @MenteeNPN), (N'Chia sẻ tài liệu Competitive Programming.', @MentorNPN),
+(N'Hỏi về Arduino IoT', @MenteeVyThuong), (N'Mẹo Marketing 2024', @MentorAnhThu),
+-- Thêm 10 post khác
+(N'Cách học AI nhanh?', @MenteeL);
+GO
 
-INSERT INTO Post (content, authorId)
-OUTPUT INSERTED.id INTO @PostPhucNhan VALUES (N'Ai rành mạch Arduino giúp mình với! Lỗi analog pin.', @MenteePhucNhan);
+DECLARE @PostNPN1 VARCHAR(20) = (SELECT TOP 1 id FROM Post WHERE authorId = @MenteeNPN);
+DECLARE @PostVy VARCHAR(20) = (SELECT TOP 1 id FROM Post WHERE authorId = @MenteeVyThuong);
 
-INSERT INTO Post (content, authorId)
-OUTPUT INSERTED.id INTO @PostVy VALUES (N'Chia sẻ template Figma cho landing page?', @MenteeVyThuong);
+INSERT INTO Images (post_id, image_url) VALUES
+(@PostNPN1, N'https://example.com/image1.jpg'), (@PostVy, N'https://example.com/image2.png');
 
--- Images
-INSERT INTO Images (post_id, image_url) VALUES (@PostPhucNhan, '/images/arduino_error.png');
-INSERT INTO Images (post_id, image_url) VALUES (@PostVy, '/images/figma_template.jpg');
-
--- Comments
 INSERT INTO Comment (content, postId, authorId) VALUES
-(N'Check chân A0 và reference voltage nhé.', @PostPhucNhan, @MentorNhanUser),
-(N'Dùng template này: [link]', @PostVy, @MentorAnhThuUser);
+(N'Học trên F8 nhé bạn.', @PostNPN1, @MentorNPN), (N'Em check lại chân tín hiệu nhé.', @PostVy, @MentorAnhThu);
 
--- Reactions
 INSERT INTO Reaction (type, postId, userId) VALUES
-('HEART', @PostPhucNhan, @MentorNhanUser),
-('LIKE', @PostVy, @MenteePhucNhan);
+('LIKE', @PostNPN1, @MentorNPN), ('HEART', @PostVy, @MenteeNPN);
 GO
 
 -- =============================================
--- 10. INSERT REVIEW & MENTOR FEEDBACK
+-- 11. INSERT REVIEWS & MENTOR FEEDBACK (NHIỀU, TRIGGER UPDATE RATING)
 -- =============================================
 INSERT INTO Review (reviewerId, mentorId, rating, comment) VALUES
-(@MenteePhucNhan, @MentorNhanUser, 5, N'Mentor Nhân dạy siêu hay!'),
-(@MenteeVyThuong, @MentorAnhThuUser, 5, N'UX/UI pro thực thụ!');
+(@MenteeNPN, @MentorNPN, 5, N'Mentor dạy siêu hay!'), (@MenteeVyThuong, @MentorNPN, 5, N'10 điểm'),
+(@MenteeAn, @MentorTuan, 4, N'Tốt'), -- Thêm 10 review khác
+(@MenteeL, @MentorA, 5, N'Excellent');
 
 INSERT INTO MentorFeedback (mentorId, menteeId, score, comment) VALUES
-(@MentorNhanUser, @MenteePhucNhan, 98, N'Mentee chăm chỉ, code nhanh'),
-(@MentorAnhThuUser, @MenteeVyThuong, 90, N'Thiện chí học hỏi');
+(@MentorNPN, @MenteeNPN, 98, N'Học giỏi, chăm chỉ'), (@MentorAnhThu, @MenteeVyThuong, 95, N'Tích cực');
 GO
 
 -- =============================================
--- 11. INSERT CHAT SERVER, MEMBER, INVITATION, CHANNEL
+-- 12. INSERT CHAT SERVERS, CHANNELS, MESSAGES, FILES, RECORDINGS (NHIỀU, TẬP TRUNG NPN)
 -- =============================================
-DECLARE @ServerAlgo VARCHAR(20), @ServerUX VARCHAR(20);
+INSERT INTO ChatServer (name, description, ownerId) VALUES
+(N'Cộng đồng Algo NPN', N'Luyện thuật toán với NPN', @MentorNPN),
+(N'Marketing Hub Anh Thư', N'Chia sẻ kinh doanh', @MentorAnhThu),
+(N'Java Community', N'Java Spring Boot', @MentorTuan);
 
-INSERT INTO ChatServer (name, description, ownerId)
-OUTPUT INSERTED.id INTO @ServerAlgo VALUES (N'HCMUT Algo Training', N'Luyện thuật toán VNOI', @MentorNhanUser);
+DECLARE @ServerNPN VARCHAR(20) = (SELECT id FROM ChatServer WHERE name = N'Cộng đồng Algo NPN');
+DECLARE @ServerAnhThu VARCHAR(20) = (SELECT id FROM ChatServer WHERE name = N'Marketing Hub Anh Thư');
 
-INSERT INTO ChatServer (name, description, ownerId)
-OUTPUT INSERTED.id INTO @ServerUX VALUES (N'UX/UI Design Community', N'Figma & Adobe XD', @MentorAnhThuUser);
-
--- Members
+-- Thêm member vào server (từ connection ACCEPTED tự động, nhưng thêm thủ công cho chắc)
 INSERT INTO ServerMember (serverId, userId, role) VALUES
-(@ServerAlgo, @MenteePhucNhan, 'MEMBER'),
-(@ServerUX, @MenteeVyThuong, 'MEMBER');
+(@ServerNPN, @MenteeNPN, 'MEMBER'), (@ServerNPN, @MenteeVyThuong, 'MEMBER'), (@ServerAnhThu, @MenteeVyThuong, 'MEMBER');
 
--- Invitations
+-- Invitation cho một số
 INSERT INTO ServerInvitation (serverId, invitedUserId, invitedById, status) VALUES
-(@ServerAlgo, @MenteeVyThuong, @MentorNhanUser, 'PENDING');
+(@ServerNPN, @MenteeAn, @MentorNPN, 'PENDING');
 
--- Channels
 INSERT INTO Channel (name, description, serverId) VALUES
-(N'general', N'Thảo luận chung', @ServerAlgo),
-(N'dp', N'Quy hoạch động', @ServerAlgo),
-(N'figma-help', N'Hỏi đáp Figma', @ServerUX);
-GO
+(N'general', N'Chung', @ServerNPN), (N'dp-help', N'Quy hoạch động', @ServerNPN),
+(N'marketing-tips', N'Mẹo hay', @ServerAnhThu);
 
--- =============================================
--- 12. INSERT MESSAGES & FILES
--- =============================================
-DECLARE @ChannelDP VARCHAR(20) = (SELECT id FROM Channel WHERE name = N'dp');
-DECLARE @Msg1 VARCHAR(20);
-
-INSERT INTO Message (content, authorId, channelId)
-OUTPUT INSERTED.id INTO @Msg1 VALUES (N'Bài DP knapsack khó quá anh ơi.', @MenteePhucNhan, @ChannelDP);
+DECLARE @ChannelDP VARCHAR(20) = (SELECT id FROM Channel WHERE name = N'dp-help' AND serverId = @ServerNPN);
 
 INSERT INTO Message (content, authorId, channelId) VALUES
-(N'Dùng memoization 2D nhé: code [paste]', @MentorNhanUser, @ChannelDP),
-(N'File solution đính kèm.', @MentorNhanUser, @ChannelDP);
+(N'Bài Knapsack khó quá anh ơi.', @MenteeNPN, @ChannelDP), (N'Dùng DP 2D là ra.', @MentorNPN, @ChannelDP),
+-- Thêm 20 message khác
+(N'Hello everyone!', @MenteeVyThuong, @ChannelDP);
 
 INSERT INTO [File] (name, url, size, messageId) VALUES
-(N'knapsack_dp.cpp', '/files/knapsack.cpp', 2048, @Msg1);
+(N'dp_code.cpp', N'https://example.com/dp.cpp', 1024, (SELECT TOP 1 id FROM Message WHERE content LIKE N'%DP 2D%'));
+
+INSERT INTO Recording (description, duration, channelId, recorderId) VALUES
+(N'Ghi âm buổi giải DP', 3600, @ChannelDP, @MentorNPN);
 GO
 
 -- =============================================
--- 13. INSERT CHAT CONVERSATION & MESSAGES (Chatbot cá nhân)
+-- 13. INSERT CHAT CONVERSATION & MESSAGES (CHO CHATBOT / PRIVATE CHAT, NHIỀU TIN NHẮN)
 -- =============================================
-DECLARE @ConvPhucNhan VARCHAR(20);
+INSERT INTO ChatConversation (userId, title) VALUES
+(@MenteeNPN, N'Chat với Bot Algo'), (@MenteeVyThuong, N'Chat Marketing Bot');
 
-INSERT INTO ChatConversation (userId, title)
-OUTPUT INSERTED.id INTO @ConvPhucNhan VALUES (@MenteePhucNhan, N'Chatbot Algo Helper');
+DECLARE @ConvNPN VARCHAR(20) = (SELECT id FROM ChatConversation WHERE userId = @MenteeNPN);
 
 INSERT INTO ChatMessage (conversationId, content) VALUES
-(@ConvPhucNhan, N'Bot: Chào Phúc Nhân! Hỏi gì về thuật toán?'),
-(@ConvPhucNhan, N'User: Giải thích BFS?'),
-(@ConvPhucNhan, N'Bot: BFS dùng Queue, visit level by level...');
+(@ConvNPN, N'Bot: Chào bạn, hỏi về DP đi!'), (@ConvNPN, N'Mentee: Knapsack là gì?'),
+(@ConvNPN, N'Bot: Đây là bài toán ba lô...'), -- Thêm 20 tin nhắn giả chatbot
+(@ConvNPN, N'Mentee: Cảm ơn bot!');
 GO
 
 -- =============================================
--- 14. INSERT RECORDING
+-- 14. INSERT NOTIFICATIONS THỦ CÔNG (BỔ SUNG NẾU TRIGGER CHƯA ĐỦ)
 -- =============================================
-INSERT INTO Recording (description, duration, channelId, recorderId) VALUES
-(N'Recording lớp C++', 3600, @ChannelDP, @MentorNhanUser);
+INSERT INTO Notification (title, content, userId, isRead) VALUES
+(N'Thông báo hệ thống', N'Chào mừng Nguyễn Phúc Nhân!', @MenteeNPN, 0),
+(N'Update mới', N'Có event mới', @MentorNPN, 0);
 GO
 
-PRINT '===== ĐÃ TẠO FULL DATA THÀNH CÔNG - TẤT CẢ BẢNG CÓ DỮ LIỆU! =====';
-PRINT 'User mẫu:';
-PRINT '- Mentee Phúc Nhân (phucnhan289@gmail.com): 2 connections ACCEPTED, progress 95.5, post Arduino, chat DP';
-PRINT '- Admin Nhân (nhanthiennguyenooko@gmail.com): Tạo event meeting';
-PRINT '- Mentor Nhân (nhan.nguyen2005phuyen@hcmut.edu.vn): Server Algo, 25 reviews';
-PRINT '- Mentee Vy Thương (nvythuogg@gmail.com): Connection UX, post Figma';
-PRINT '- Mentor Anh Thư (anhthuxuanyen@gmail.com): Server UX, chuyên Figma';
+PRINT '===== ĐÃ TẠO DATA ĐẦY ĐỦ THÀNH CÔNG =====';
 GO
