@@ -33,7 +33,6 @@ model User {
   eventAssignments    EventAssignment[]
   notifications       Notification[]
   progressRecords     ProgressRecord[]
-  reports             ReportsView[]
   posts               Post[]
   comments            Comment[]
   reactions           Reaction[]
@@ -47,7 +46,6 @@ model User {
   serverMemberships   ServerMember[]
   messages            Message[]
   chatConversations   ChatConversation[]
-  recordings          Recording[]
 
   @@map("User")
 }
@@ -168,18 +166,6 @@ model ProgressRecord {
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
 
   mentee User @relation(fields: [menteeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model ReportsView {
-  id          String   @id @default(dbgenerated()) @db.VarChar(20)
-  userId      String   @db.VarChar(20)
-  title       String   @db.NVarChar(255)
-  description String?  @db.NVarChar(1023)
-  visibility  String?  @default("Private") @db.NVarChar(20)
-  createdAt   DateTime @default(now()) @db.DateTime2
-  updatedAt   DateTime @default(now()) @updatedAt @db.DateTime2
-
-  user User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Post {
@@ -311,7 +297,6 @@ model Channel {
 
   server     ChatServer  @relation(fields: [serverId], references: [id], onDelete: Cascade)
   messages   Message[]
-  recordings Recording[]
 
   @@unique([serverId, name])
 }
@@ -361,17 +346,4 @@ model ChatMessage {
   createdAt      DateTime @default(now()) @db.DateTime2
 
   conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-}
-
-model Recording {
-  id          String   @id @default(dbgenerated()) @db.VarChar(20)
-  description String?  @db.NVarChar(Max)
-  duration    Int
-  channelId   String   @db.VarChar(20)
-  recorderId  String   @db.VarChar(20)
-  createdAt   DateTime @default(now()) @db.DateTime2
-  updatedAt   DateTime @default(now()) @updatedAt @db.DateTime2
-
-  channel  Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  recorder User    @relation(fields: [recorderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
