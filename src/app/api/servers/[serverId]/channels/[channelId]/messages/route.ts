@@ -55,7 +55,10 @@ export async function GET(
           name: msg.author.name || 'Unknown User',
           image: msg.author.image || '',
         },
-        files: msg.files,
+        files: msg.files.map((file: any) => ({
+          ...file,
+          size: file.size.toString(),
+        })),
         timestamp: msg.createdAt,
       }))
     );
