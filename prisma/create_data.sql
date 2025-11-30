@@ -131,13 +131,6 @@ INSERT INTO ProgressRecord (menteeId, score, notes) VALUES
 (@MenteeVyThuong, 92.0, N'Tốt Marketing cơ bản'), (@MenteeAn, 85.0, N'Java Spring Boot');
 
 -- =============================================
--- 9. INSERT REPORTS VIEW
--- =============================================
-INSERT INTO ReportsView (userId, title, description, visibility) VALUES
-(@AdminNPN, N'Báo cáo hệ thống', N'Tổng quan user', 'Private'),
-(@MentorNPN, N'Báo cáo mentee', N'Tiến độ NPN & Vy Thương', 'Private');
-
--- =============================================
 -- 10. INSERT POSTS, IMAGES, COMMENTS, REACTIONS
 -- =============================================
 INSERT INTO Post (content, authorId) VALUES
@@ -197,9 +190,6 @@ INSERT INTO Message (content, authorId, channelId) VALUES
 
 INSERT INTO [File] (name, url, size, messageId) VALUES
 (N'dp_code.cpp', N'https://example.com/dp.cpp', 1024, (SELECT TOP 1 id FROM Message WHERE content LIKE N'%DP 2D%'));
-
-INSERT INTO Recording (description, duration, channelId, recorderId) VALUES
-(N'Ghi âm buổi giải DP', 3600, @ChannelDP, @MentorNPN);
 
 -- =============================================
 -- 13. INSERT CHAT CONVERSATION & MESSAGES
