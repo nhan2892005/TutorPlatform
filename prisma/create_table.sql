@@ -153,21 +153,6 @@ CREATE TABLE ProgressRecord (
 );
 GO
 
--- AnalyticsView
-CREATE SEQUENCE seq_analyticsview START WITH 1 INCREMENT BY 1;
-GO
-CREATE TABLE ReportsView (
-    [id] VARCHAR(20) PRIMARY KEY DEFAULT ('REPORT' + RIGHT('00000' + CAST(NEXT VALUE FOR seq_analyticsview AS VARCHAR(5)), 5)),
-    [userId] VARCHAR(20) NOT NULL,
-    [title] NVARCHAR(255) NOT NULL,
-    [description] NVARCHAR(1023),
-    [visibility] NVARCHAR(20) DEFAULT 'Private',
-    [createdAt] DATETIME2 NOT NULL DEFAULT GETDATE(),
-    [updatedAt] DATETIME2 NOT NULL DEFAULT GETDATE(),
-    CONSTRAINT fk_analytics_user FOREIGN KEY (userId) REFERENCES [User](id),
-);
-GO
-
 -- Post
 CREATE SEQUENCE seq_post START WITH 1 INCREMENT BY 1;
 GO
@@ -373,23 +358,6 @@ CREATE TABLE ChatMessage (
     [content] NVARCHAR(MAX) NOT NULL,
     [createdAt] DATETIME2 NOT NULL DEFAULT GETDATE(),
     CONSTRAINT fk_chatmessage_conversation FOREIGN KEY (conversationId) REFERENCES ChatConversation(id) ON DELETE CASCADE,
-);
-GO
-
--- Recording
-CREATE SEQUENCE seq_recording START WITH 1 INCREMENT BY 1;
-GO
-CREATE TABLE Recording (
-    [id] VARCHAR(20) PRIMARY KEY DEFAULT ('REC' + RIGHT('00000' + CAST(NEXT VALUE FOR seq_recording AS VARCHAR(5)), 5)),
-    [description] NVARCHAR(MAX),
-    [duration] INT NOT NULL,
-    [channelId] VARCHAR(20) NOT NULL,
-    [recorderId] VARCHAR(20) NOT NULL,
-    [createdAt] DATETIME2 NOT NULL DEFAULT GETDATE(),
-    [updatedAt] DATETIME2 NOT NULL DEFAULT GETDATE(),
-    CONSTRAINT fk_recording_channel FOREIGN KEY (channelId) REFERENCES Channel(id) ON DELETE CASCADE,
-    CONSTRAINT fk_recording_recorder FOREIGN KEY (recorderId) REFERENCES [User](id),
-    CONSTRAINT chk_recording_duration CHECK (duration > 0 AND duration <= 10800) -- 3 hours max
 );
 GO
 
