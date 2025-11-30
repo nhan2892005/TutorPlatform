@@ -4,26 +4,22 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-// LƯU Ý: Đã xóa toàn bộ enum vì SQL Server không hỗ trợ Prisma Enum.
-// Thay vào đó, chúng ta dùng String.
 
 // 2. Định nghĩa Models
 
 model User {
-  id            String   @id @default(dbgenerated()) @db.VarChar(20)
-  name          String?  @db.NVarChar(100)
-  email         String   @unique @db.NVarChar(100)
-  accountStatus String?  @default("Active") @map("account_status") @db.NVarChar(20)
-  // Đổi Enum thành String
-  userType      String   @default("MENTEE") @map("user_type") @db.VarChar(10) 
-  department    String?  @db.NVarChar(100)
-  major         String?  @db.NVarChar(100)
-  createdAt     DateTime @default(now()) @db.DateTime2
-  updatedAt     DateTime @default(now()) @updatedAt @db.DateTime2
+  id            String   @id @default(dbgenerated("'USR' || LPAD(nextval('seq_user')::TEXT, 5, '0')")) @db.VarChar(20)
+  name          String?  @db.VarChar(100)
+  email         String   @unique @db.VarChar(100)
+  accountStatus String?  @default("Active") @map("account_status") @db.VarChar(20)
+  userType      String   @default("MENTEE") @map("user_type") @db.VarChar(10)
+  department    String?  @db.VarChar(100)
+  major         String?  @db.VarChar(100)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   // Quan hệ
   mentorProfile       MentorProfile?
@@ -47,303 +43,329 @@ model User {
   messages            Message[]
   chatConversations   ChatConversation[]
 
-  @@map("User")
+  @@map("user")
 }
 
 model MentorProfile {
-  id           String   @id @default(dbgenerated()) @db.VarChar(20)
-  userId       String   @unique @db.VarChar(20)
+  id           String   @id @default(dbgenerated("'MPR' || LPAD(nextval('seq_mentorprofile')::TEXT, 5, '0')")) @db.VarChar(20)
+  userId       String   @unique @map("user_id") @db.VarChar(20)
   rating       Decimal  @default(0.00) @db.Decimal(3, 2)
-  totalReviews Int      @default(0)
-  createdAt    DateTime @default(now()) @db.DateTime2
-  updatedAt    DateTime @default(now()) @updatedAt @db.DateTime2
+  totalReviews Int      @default(0) @map("total_reviews")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   chuyenMon ChuyenMon[]
   lichTrong LichTrong[]
+
+  @@map("mentor_profile")
 }
 
 model ChuyenMon {
   mentorId String @map("mentor_id") @db.VarChar(20)
-  bangCap  String @map("bang_cap") @db.NVarChar(255)
+  bangCap  String @map("bang_cap") @db.VarChar(255)
 
   mentor MentorProfile @relation(fields: [mentorId], references: [id], onDelete: Cascade)
 
   @@id([mentorId, bangCap])
-  @@map("ChuyenMon")
+  @@map("chuyen_mon")
 }
 
 model LichTrong {
   maLichTrong Int      @id @default(autoincrement()) @map("ma_lich_trong")
   mentorId    String   @map("mentor_id") @db.VarChar(20)
   ngay        DateTime @db.Date
-  gioBatDau   DateTime @map("gio_bat_dau") @db.Time
-  gioKetThuc  DateTime @map("gio_ket_thuc") @db.Time
+  gioBatDau   DateTime @map("gio_bat_dau") @db.Time(6)
+  gioKetThuc  DateTime @map("gio_ket_thuc") @db.Time(6)
 
   mentor MentorProfile @relation(fields: [mentorId], references: [id], onDelete: Cascade)
 
-  @@map("LichTrong")
+  @@map("lich_trong")
 }
 
 model MenteeConnection {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  menteeId  String   @db.VarChar(20)
-  mentorId  String   @db.VarChar(20)
-  // Đổi Enum thành String
-  status    String   @default("PENDING") @db.VarChar(20) 
-  createdAt DateTime @default(now()) @db.DateTime2
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
+  id        String   @id @default(dbgenerated("'MCN' || LPAD(nextval('seq_menteeconnection')::TEXT, 5, '0')")) @db.VarChar(20)
+  menteeId  String   @map("mentee_id") @db.VarChar(20)
+  mentorId  String   @map("mentor_id") @db.VarChar(20)
+  status    String   @default("PENDING") @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   mentee User @relation("MenteeRel", fields: [menteeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   mentor User @relation("MentorRel", fields: [mentorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([menteeId, mentorId])
+  @@map("mentee_connection")
 }
 
 model CalendarEvent {
-  id          String   @id @default(dbgenerated()) @db.VarChar(20)
-  title       String   @db.NVarChar(255)
-  description String?  @db.NVarChar(Max)
-  startTime   DateTime @db.DateTime2
-  endTime     DateTime @db.DateTime2
-  // Đổi Enum thành String
+  id          String   @id @default(dbgenerated("'EVT' || LPAD(nextval('seq_calendarevent')::TEXT, 5, '0')")) @db.VarChar(20)
+  title       String   @db.VarChar(255)
+  description String?  @db.Text
+  startTime   DateTime @map("start_time") @db.Timestamp(6)
+  endTime     DateTime @map("end_time") @db.Timestamp(6)
   priority    String   @default("MEDIUM") @db.VarChar(20)
-  isCompleted Boolean  @default(false)
-  creatorId   String   @db.VarChar(20)
-  createdAt   DateTime @default(now()) @db.DateTime2
-  updatedAt   DateTime @default(now()) @updatedAt @db.DateTime2
+  isCompleted Boolean  @default(false) @map("is_completed")
+  creatorId   String   @map("creator_id") @db.VarChar(20)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   creator     User              @relation("EventCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assignments EventAssignment[]
   reminders   EventReminder[]
+
+  @@map("calendar_event")
 }
 
 model EventAssignment {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  eventId   String   @db.VarChar(20)
-  userId    String   @db.VarChar(20)
-  // Đổi Enum thành String
+  id        String   @id @default(dbgenerated("'EAS' || LPAD(nextval('seq_eventassignment')::TEXT, 5, '0')")) @db.VarChar(20)
+  eventId   String   @map("event_id") @db.VarChar(20)
+  userId    String   @map("user_id") @db.VarChar(20)
   status    String   @default("PENDING") @db.VarChar(20)
-  createdAt DateTime @default(now()) @db.DateTime2
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  event    User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user     User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   calEvent CalendarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@unique([eventId, userId])
+  @@map("event_assignment")
 }
 
 model EventReminder {
-  id           String   @id @default(dbgenerated()) @db.VarChar(20)
-  eventId      String   @db.VarChar(20)
-  reminderTime DateTime @db.DateTime2
-  message      String?  @db.NVarChar(255)
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now()) @db.DateTime2
-  updatedAt    DateTime @default(now()) @updatedAt @db.DateTime2
+  id           String   @id @default(dbgenerated("'RMD' || LPAD(nextval('seq_eventreminder')::TEXT, 5, '0')")) @db.VarChar(20)
+  eventId      String   @map("event_id") @db.VarChar(20)
+  reminderTime DateTime @map("reminder_time") @db.Timestamp(6)
+  message      String?  @db.VarChar(255)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   event CalendarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("event_reminder")
 }
 
 model Notification {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  title     String   @db.NVarChar(255)
-  content   String   @db.NVarChar(Max)
-  isRead    Boolean  @default(false)
-  userId    String   @db.VarChar(20)
-  createdAt DateTime @default(now()) @db.DateTime2
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
+  id        String   @id @default(dbgenerated("'NTF' || LPAD(nextval('seq_notification')::TEXT, 5, '0')")) @db.VarChar(20)
+  title     String   @db.VarChar(255)
+  content   String   @db.Text
+  isRead    Boolean  @default(false) @map("is_read")
+  userId    String   @map("user_id") @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   user User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("notification")
 }
 
 model ProgressRecord {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  menteeId  String   @db.VarChar(20)
+  id        String   @id @default(dbgenerated("'PRG' || LPAD(nextval('seq_progressrecord')::TEXT, 5, '0')")) @db.VarChar(20)
+  menteeId  String   @map("mentee_id") @db.VarChar(20)
   score     Decimal  @db.Decimal(5, 2)
-  notes     String?  @db.NVarChar(Max)
-  createdAt DateTime @default(now()) @db.DateTime2
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   mentee User @relation(fields: [menteeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("progress_record")
 }
 
 model Post {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  content   String   @db.NVarChar(Max)
-  authorId  String   @db.VarChar(20)
-  createdAt DateTime @default(now()) @db.DateTime2
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
+  id        String   @id @default(dbgenerated("'POST' || LPAD(nextval('seq_post')::TEXT, 5, '0')")) @db.VarChar(20)
+  content   String   @db.Text
+  authorId  String   @map("author_id") @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   author    User       @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   images    Images[]
   comments  Comment[]
   reactions Reaction[]
+
+  @@map("post")
 }
 
 model Images {
-  id       String @id @default(dbgenerated()) @db.VarChar(20)
+  id       String @id @default(dbgenerated("'IMG' || LPAD(nextval('seq_img')::TEXT, 5, '0')")) @db.VarChar(20)
   postId   String @map("post_id") @db.VarChar(20)
-  imageUrl String @map("image_url") @db.NVarChar(255)
+  imageUrl String @map("image_url") @db.VarChar(255)
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  @@map("Images")
+  @@map("images")
 }
 
 model Comment {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  content   String   @db.NVarChar(Max)
-  postId    String   @db.VarChar(20)
-  authorId  String   @db.VarChar(20)
-  createdAt DateTime @default(now()) @db.DateTime2
+  id        String   @id @default(dbgenerated("'CMT' || LPAD(nextval('seq_comment')::TEXT, 5, '0')")) @db.VarChar(20)
+  content   String   @db.Text
+  postId    String   @map("post_id") @db.VarChar(20)
+  authorId  String   @map("author_id") @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   author User @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("comment")
 }
 
 model Reaction {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  // Đổi Enum thành String
+  id        String   @id @default(dbgenerated("'RCT' || LPAD(nextval('seq_reaction')::TEXT, 5, '0')")) @db.VarChar(20)
   type      String   @db.VarChar(20)
-  postId    String   @db.VarChar(20)
-  userId    String   @db.VarChar(20)
-  createdAt DateTime @default(now()) @db.DateTime2
+  postId    String   @map("post_id") @db.VarChar(20)
+  userId    String   @map("user_id") @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([postId, userId])
+  @@map("reaction")
 }
 
 model Review {
-  id         String   @id @default(dbgenerated()) @db.VarChar(20)
-  reviewerId String   @db.VarChar(20)
-  mentorId   String   @db.VarChar(20)
+  id         String   @id @default(dbgenerated("'RVW' || LPAD(nextval('seq_review')::TEXT, 5, '0')")) @db.VarChar(20)
+  reviewerId String   @map("reviewer_id") @db.VarChar(20)
+  mentorId   String   @map("mentor_id") @db.VarChar(20)
   rating     Int
-  comment    String?  @db.NVarChar(Max)
-  createdAt  DateTime @default(now()) @db.DateTime2
+  comment    String?  @db.Text
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   reviewer User @relation("ReviewerRel", fields: [reviewerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   mentor   User @relation("MentorReviewRel", fields: [mentorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("review")
 }
 
 model MentorFeedback {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  mentorId  String   @db.VarChar(20)
-  menteeId  String   @db.VarChar(20)
+  id        String   @id @default(dbgenerated("'FDB' || LPAD(nextval('seq_mentorfeedback')::TEXT, 5, '0')")) @db.VarChar(20)
+  mentorId  String   @map("mentor_id") @db.VarChar(20)
+  menteeId  String   @map("mentee_id") @db.VarChar(20)
   score     Int?
-  comment   String?  @db.NVarChar(Max)
-  createdAt DateTime @default(now()) @db.DateTime2
+  comment   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   mentor User @relation("FeedbackMentorRel", fields: [mentorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   mentee User @relation("FeedbackMenteeRel", fields: [menteeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("mentor_feedback")
 }
 
 model ChatServer {
-  id          String   @id @default(dbgenerated()) @db.VarChar(20)
-  name        String   @db.NVarChar(100)
-  description String?  @db.NVarChar(Max)
-  image       String?  @db.NVarChar(500)
-  ownerId     String   @db.VarChar(20)
-  createdAt   DateTime @default(now()) @db.DateTime2
-  updatedAt   DateTime @default(now()) @updatedAt @db.DateTime2
+  id          String   @id @default(dbgenerated("'SRV' || LPAD(nextval('seq_chatserver')::TEXT, 5, '0')")) @db.VarChar(20)
+  name        String   @db.VarChar(100)
+  description String?  @db.Text
+  image       String?  @db.VarChar(500)
+  ownerId     String   @map("owner_id") @db.VarChar(20)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   owner       User               @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   invitations ServerInvitation[]
   members     ServerMember[]
   channels    Channel[]
+
+  @@map("chat_server")
 }
 
 model ServerInvitation {
-  id            String   @id @default(dbgenerated()) @db.VarChar(20)
-  serverId      String   @db.VarChar(20)
-  invitedUserId String   @db.VarChar(20)
-  invitedById   String   @db.VarChar(20)
-  // Đổi Enum thành String
+  id            String   @id @default(dbgenerated("'INV' || LPAD(nextval('seq_serverinvitation')::TEXT, 5, '0')")) @db.VarChar(20)
+  serverId      String   @map("server_id") @db.VarChar(20)
+  invitedUserId String   @map("invited_user_id") @db.VarChar(20)
+  invitedById   String   @map("invited_by_id") @db.VarChar(20)
   status        String   @default("PENDING") @db.VarChar(20)
-  createdAt     DateTime @default(now()) @db.DateTime2
-  updatedAt     DateTime @default(now()) @updatedAt @db.DateTime2
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   server      ChatServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
   invitedUser User       @relation("InvitedUser", fields: [invitedUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   inviter     User       @relation("Inviter", fields: [invitedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([serverId, invitedUserId])
+  @@map("server_invitation")
 }
 
 model ServerMember {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  serverId  String   @db.VarChar(20)
-  userId    String   @db.VarChar(20)
-  // Đổi Enum thành String
+  id        String   @id @default(dbgenerated("'MBR' || LPAD(nextval('seq_servermember')::TEXT, 5, '0')")) @db.VarChar(20)
+  serverId  String   @map("server_id") @db.VarChar(20)
+  userId    String   @map("user_id") @db.VarChar(20)
   role      String   @default("MEMBER") @db.VarChar(20)
-  createdAt DateTime @default(now()) @db.DateTime2
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   server ChatServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
   user   User       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([serverId, userId])
+  @@map("server_member")
 }
 
 model Channel {
-  id          String   @id @default(dbgenerated()) @db.VarChar(20)
-  name        String   @db.NVarChar(100)
-  description String?  @db.NVarChar(Max)
-  serverId    String   @db.VarChar(20)
-  createdAt   DateTime @default(now()) @db.DateTime2
-  updatedAt   DateTime @default(now()) @updatedAt @db.DateTime2
+  id          String   @id @default(dbgenerated("'CHN' || LPAD(nextval('seq_channel')::TEXT, 5, '0')")) @db.VarChar(20)
+  name        String   @db.VarChar(100)
+  description String?  @db.Text
+  serverId    String   @map("server_id") @db.VarChar(20)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  server     ChatServer  @relation(fields: [serverId], references: [id], onDelete: Cascade)
-  messages   Message[]
+  server   ChatServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  messages Message[]
 
   @@unique([serverId, name])
+  @@map("channel")
 }
 
 model Message {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  content   String?  @db.NVarChar(Max)
-  authorId  String   @db.VarChar(20)
-  channelId String   @db.VarChar(20)
-  createdAt DateTime @default(now()) @db.DateTime2
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
+  id        String   @id @default(dbgenerated("'MSG' || LPAD(nextval('seq_message')::TEXT, 5, '0')")) @db.VarChar(20)
+  content   String?  @db.Text
+  authorId  String   @map("author_id") @db.VarChar(20)
+  channelId String   @map("channel_id") @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  author  User   @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  author  User    @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
   files   File[]
+
+  @@map("message")
 }
 
 model File {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  name      String   @db.NVarChar(255)
-  url       String   @db.NVarChar(500)
+  id        String   @id @default(dbgenerated("'FIL' || LPAD(nextval('seq_file')::TEXT, 5, '0')")) @db.VarChar(20)
+  name      String   @db.VarChar(255)
+  url       String   @db.VarChar(500)
   size      BigInt
-  messageId String   @db.VarChar(20)
-  createdAt DateTime @default(now()) @db.DateTime2
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
+  messageId String   @map("message_id") @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
-  @@map("File")
+  @@map("file")
 }
 
 model ChatConversation {
-  id        String   @id @default(dbgenerated()) @db.VarChar(20)
-  userId    String   @db.VarChar(20)
-  title     String?  @db.NVarChar(255)
-  createdAt DateTime @default(now()) @db.DateTime2
-  updatedAt DateTime @default(now()) @updatedAt @db.DateTime2
+  id        String   @id @default(dbgenerated("'CNV' || LPAD(nextval('seq_chatconversation')::TEXT, 5, '0')")) @db.VarChar(20)
+  userId    String   @map("user_id") @db.VarChar(20)
+  title     String?  @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages ChatMessage[]
+
+  @@map("chat_conversation")
 }
 
 model ChatMessage {
-  id             String   @id @default(dbgenerated()) @db.VarChar(20)
-  conversationId String   @db.VarChar(20)
-  content        String   @db.NVarChar(Max)
-  createdAt      DateTime @default(now()) @db.DateTime2
+  id             String   @id @default(dbgenerated("'CHM' || LPAD(nextval('seq_chatmessage')::TEXT, 5, '0')")) @db.VarChar(20)
+  conversationId String   @map("conversation_id") @db.VarChar(20)
+  content        String   @db.Text
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("chat_message")
 }
