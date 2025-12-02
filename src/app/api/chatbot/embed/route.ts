@@ -20,10 +20,10 @@ export async function POST(request: NextRequest) {
     // Index mentors
     if (!types || types.includes('mentors')) {
       const mentors = await prisma.user.findMany({
-        where: { role: 'MENTOR' },
+        where: { userType: 'MENTOR' },
         include: { 
           mentorProfile: true,
-          receivedReviews: {
+          reviewsReceived: {
             include: { reviewer: true },
             take: 5,
             orderBy: { createdAt: 'desc' },
@@ -32,8 +32,8 @@ export async function POST(request: NextRequest) {
       });
 
       documents.push(...mentors.map((mentor:any) => {
-        const reviews = mentor.receivedReviews
-          .map((r:any) => `"${r.comment}" - ${r.reviewer.name}`)
+        const reviews = (mentor.receivedReviews ?? [])
+          .map((r: any) => `"${r.comment}" - ${r.reviewer?.name || 'Unknown'}`)
           .join('\n');
 
         return {

@@ -6,7 +6,7 @@ import { authOptions } from "../../../auth/[...nextauth]/route";
 import { Prisma } from "@prisma/client"; // Bỏ import ReactionType
 
 // 1. Tự định nghĩa danh sách các reaction hợp lệ
-const VALID_REACTIONS = ["LIKE", "LOVE", "HAHA", "WOW", "SAD", "ANGRY"];
+const VALID_REACTIONS = ["LIKE", "HEART", "HAHA", "SAD", "CONGRATS"];
 
 export async function POST(
   request: Request,
@@ -20,6 +20,7 @@ export async function POST(
 
     const body = await request.json();
     const type = body?.type; // Kiểu dữ liệu bây giờ là string
+    console.log(type)
 
     // 2. Sửa lại logic kiểm tra hợp lệ
     if (!type || !VALID_REACTIONS.includes(type)) {
