@@ -13,7 +13,7 @@ const httpServer = createServer();
 // Create Socket.IO server with CORS configuration
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.NEXTAUTH_URL || "http://13.211.80.203.nip.io:3001",
+    origin: "*",
     methods: ["GET", "POST"],
     credentials: true
   }
