@@ -526,7 +526,6 @@ io.on('connection', async (socket) => {
             create: files.map(file => ({
               name: file.name,
               url: file.url,
-              type: file.type,
               size: file.size
             }))
           }
@@ -545,7 +544,10 @@ io.on('connection', async (socket) => {
           name: message.author.name || 'Unknown User',
           image: message.author.image || `https://api.dicebear.com/9.x/big-smile/svg?seed=${message.author.name}`
         },
-        files: message.files,
+        files: message.files.map(file => ({
+          ...file,
+          size: Number(file.size) // Convert BigInt to Number
+        })),
         timestamp: message.createdAt
       };
 
@@ -750,7 +752,7 @@ io.on('connection', async (socket) => {
 
 // ==================== SERVER STARTUP ====================
 
-const PORT = process.env.PORT || process.env.SOCKET_PORT || 3001;
+const PORT = process.env.SOCKET_PORT || 3001;
 httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`Socket server running on port ${PORT} (0.0.0.0)`);
 });
