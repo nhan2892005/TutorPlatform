@@ -43,7 +43,7 @@ export default async function MyMenteesPage() {
               ...c,
               mentee: {
                 ...c.mentee,
-                image: `https://api.dicebear.com/9.x/initials/svg?seed=${c.mentee.name}`
+                image: `https://api.dicebear.com/9.x/big-smile/svg?seed=${c.mentee.name}`
               }
             };
             return <MenteeCard key={c.id} connection={menteeWithAvatar} />;

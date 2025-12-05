@@ -55,7 +55,6 @@ export async function GET(req: Request) {
       id: true,
       name: true,
       email: true,
-      image: true,
       userType: true,
       department: true,
       major: true,

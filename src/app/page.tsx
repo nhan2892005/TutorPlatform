@@ -51,7 +51,7 @@ async function getPosts(page: number = 1, limit: number = 10) {
     images: post.images.map((img:any) => img.imageUrl),
     author: {
       ...post.author,
-      image: `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(post.author.name || 'User')}`, 
+      image: `https://api.dicebear.com/9.x/big-smile/svg?seed=${encodeURIComponent(post.author.name || 'User')}`, 
       role: post.author.userType
     },
 
@@ -60,7 +60,7 @@ async function getPosts(page: number = 1, limit: number = 10) {
       createdAt: comment.createdAt.toISOString(),
       author: {
         ...comment.author,
-        image: `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(comment.author.name || 'User')}`
+        image: `https://api.dicebear.com/9.x/big-smile/svg?seed=${encodeURIComponent(comment.author.name || 'User')}`
       }
     }))
   }));

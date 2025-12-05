@@ -69,7 +69,7 @@ export async function POST(request: Request) {
         user: {
           ...member.user,
           role: member.user.userType,
-          image: `https://api.dicebear.com/9.x/initials/svg?seed=${member.user.name}`
+          image: `https://api.dicebear.com/9.x/big-smile/svg?seed=${member.user.name}`
         }
       }))
     };
@@ -146,14 +146,14 @@ export async function GET() {
       ...server,
       owner: {
         ...server.owner,
-        image: `https://api.dicebear.com/9.x/initials/svg?seed=${server.owner.name}`
+        image: `https://api.dicebear.com/9.x/big-smile/svg?seed=${server.owner.name}`
       },
       members: server.members.map((member:any) => ({
         ...member,
         user: {
           ...member.user,
           role: member.user.userType,
-          image: `https://api.dicebear.com/9.x/initials/svg?seed=${member.user.name}`
+          image: `https://api.dicebear.com/9.x/big-smile/svg?seed=${member.user.name}`
         }
       }))
     }));

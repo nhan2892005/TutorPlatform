@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
       comment: feedback.comment || '',
       date: feedback.createdAt.toISOString().split('T')[0],
       mentorName: feedback.mentor?.name || 'Unknown',
-      mentorImage: feedback.mentor?.image
+      mentorImage: feedback.mentor?.image || `https://api.dicebear.com/9.x/big-smile/svg?seed=${feedback.mentor?.name}`
     }));
 
     return NextResponse.json({

@@ -113,7 +113,7 @@ export async function POST(
           id: result.user.id,
           name: result.user.name,
           email: result.user.email,
-          image: result.user.image,
+          image: result.user.image || `https://api.dicebear.com/9.x/big-smile/svg?seed=${result.user.name}`,
         },
         server: result.server,
       });

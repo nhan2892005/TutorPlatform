@@ -69,7 +69,7 @@ export async function GET(
     // Add generated avatar
     const formattedUser = {
       ...user,
-      image: `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}`
+      image: `https://api.dicebear.com/9.x/big-smile/svg?seed=${user.name}`
     };
 
     return NextResponse.json({ 

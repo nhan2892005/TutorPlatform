@@ -40,7 +40,7 @@ export async function GET() {
       ...mentor,
       user: {
         ...mentor.user,
-        image: `https://api.dicebear.com/9.x/initials/svg?seed=${mentor.user.name}`
+        image: `https://api.dicebear.com/9.x/big-smile/svg?seed=${mentor.user.name}`
       }
     }));
 

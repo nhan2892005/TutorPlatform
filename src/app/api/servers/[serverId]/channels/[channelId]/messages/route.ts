@@ -53,7 +53,7 @@ export async function GET(
         type: msg.type,
         author: {
           name: msg.author.name || 'Unknown User',
-          image: msg.author.image || '',
+          image: msg.author.image || `https://api.dicebear.com/9.x/big-smile/svg?seed=${msg.author.name}`,
         },
         files: msg.files.map((file: any) => ({
           ...file,
@@ -135,7 +135,7 @@ export async function POST(
       type: message.type,
       author: {
         name: message.author.name || 'Unknown User',
-        image: message.author.image || '',
+        image: message.author.image || `https://api.dicebear.com/9.x/big-smile/svg?seed=${message.author.name}`,
       },
       files: message.files,
       timestamp: message.createdAt,
