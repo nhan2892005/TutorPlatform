@@ -8,7 +8,15 @@ const mediasoupService = require('./mediasoup-service');
 const prisma = new PrismaClient();
 
 // Create HTTP server
-const httpServer = createServer();
+const httpServer = createServer((req, res) => {
+  if (req.url === '/' || req.url === '/health') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('OK');
+  } else {
+    res.writeHead(404);
+    res.end();
+  }
+});
 
 // Create Socket.IO server with CORS configuration
 const io = new Server(httpServer, {
@@ -740,10 +748,9 @@ io.on('connection', async (socket) => {
 
 // ==================== SERVER STARTUP ====================
 
-const PORT = process.env.SOCKET_PORT || 3001;
+const PORT = process.env.PORT || process.env.SOCKET_PORT || 3001;
 httpServer.listen(PORT, '0.0.0.0', () => {
-  console.log(`Socket server running on port ${PORT}`);
-  console.log(`Mediasoup workers initialized`);
+  console.log(`Socket server running on port ${PORT} (0.0.0.0)`);
 });
 
 // Graceful shutdown
