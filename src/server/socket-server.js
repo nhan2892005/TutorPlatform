@@ -546,7 +546,7 @@ io.on('connection', async (socket) => {
         },
         files: message.files.map(file => ({
           ...file,
-          size: Number(file.size) // Convert BigInt to Number
+          size: Number(file.size)
         })),
         timestamp: message.createdAt
       };
