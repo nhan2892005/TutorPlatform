@@ -21,7 +21,10 @@ const httpServer = createServer((req, res) => {
 // Create Socket.IO server with CORS configuration
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: [
+      "https://hcmuttutor.onrender.com", 
+      "http://localhost:3000"
+    ],
     methods: ["GET", "POST"],
     credentials: true
   }
