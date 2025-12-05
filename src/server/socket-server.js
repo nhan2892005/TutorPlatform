@@ -541,7 +541,6 @@ io.on('connection', async (socket) => {
       const formattedMessage = {
         id: message.id,
         content: message.content,
-        type: message.type,
         author: {
           name: message.author.name || 'Unknown User',
           image: message.author.image || `https://api.dicebear.com/9.x/big-smile/svg?seed=${message.author.name}`
