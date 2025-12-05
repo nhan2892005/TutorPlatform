@@ -741,7 +741,7 @@ io.on('connection', async (socket) => {
 // ==================== SERVER STARTUP ====================
 
 const PORT = process.env.SOCKET_PORT || 3001;
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`Socket server running on port ${PORT}`);
   console.log(`Mediasoup workers initialized`);
 });
